@@ -105,7 +105,7 @@ class AssimilScheduler:
                 f"{self.config.name} - Projected Finish date: {self.calculate_projected_finish_date(review.total_lessons - review.lesson_count)}"
             )
         print(
-            f"{idx + 1}. Lesson {review.lesson_count} of {review.total_lessons} ({(review.lesson_count / review.total_lessons) * 100:.2f}%)"
+            f"{idx + 1}. Review {review.lesson_count} of {review.total_lessons} ({(review.lesson_count / review.total_lessons) * 100:.2f}%)"
         )
         print(
             f"Lesson: {review.lesson_number}, {review.practice_type} ({review.practice_review_count}) [{review.lesson_review_count}]\n"
