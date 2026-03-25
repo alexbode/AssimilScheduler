@@ -15,6 +15,11 @@ parser.add_argument(
 parser.add_argument(
     "--next", type=int, default=4, help="Return next n lessons, default is 4."
 )
+parser.add_argument(
+    "--complete",
+    action="store_true",
+    help="Mark the next lesson as completed.",
+)
 
 if __name__ == "__main__":
     args = parser.parse_args()
@@ -28,5 +33,8 @@ if __name__ == "__main__":
     if args.course and args.next:
         config = configs.get_config(args.course)
         s = AssimilScheduler(config.name, LogReader(config.log_file), config)
+        if args.complete:
+            s.complete()
+            sys.exit(0)
         s.get_next_lesson(next_n=args.next)
         sys.exit(0)

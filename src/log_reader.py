@@ -1,3 +1,4 @@
+import os
 import csv
 from datetime import datetime
 from pathlib import Path
@@ -27,10 +28,11 @@ class LogReader:
     def _read_log_file(self) -> list[tuple[datetime, int, PracticeType]]:
         if not self.filename.exists():
             raise ValueError(f"Log file not found: {self.filename}")
+        self.strip_new_lines()
         output = []
         prev_date = None
-        with open(self.filename, newline="", encoding="utf-8") as csvfile:
-            csv_reader = csv.reader(csvfile, delimiter=",")
+        with open(self.filename, newline="", encoding="utf-8") as f:
+            csv_reader = csv.reader(f, delimiter=",")
             headers = next(csv_reader, None)
             if (
                 len(headers) != 3
@@ -81,3 +83,19 @@ class LogReader:
 
     def log_count(self) -> int:
         return len(self.log_file)
+
+    def strip_new_lines(self):
+        with open(self.filename, 'r') as f:
+            content = f.read()
+            content = content.rstrip('\r\n')
+        with open(self.filename, 'w') as f:
+            f.write(content)
+
+
+    def append_completed_lesson(self, lesson: int, practice_type: PracticeType):
+        self.strip_new_lines()
+        with open(self.filename, "a", encoding="utf-8", newline="\n") as f:
+            now = datetime.now()
+            f.write(
+                f"\n{now.strftime('%Y-%m-%d')},{lesson},{practice_type.name}"
+            )

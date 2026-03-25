@@ -12,7 +12,7 @@ class Configs:
     if there exists a variable named `config`.
     """
 
-    def __init__(self, path: str = Path(__file__).parent.parent / "configs"):
+    def __init__(self, path: str = Path(__file__).parent / "configs"):
         self.configs_path: str = path
         self.configs = self._import_configs()
 

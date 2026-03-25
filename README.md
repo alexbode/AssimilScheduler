@@ -23,7 +23,7 @@ date,lesson,practice_type
 
 
 ### Config
-The config defines the review plan, the name of the log file. See the configs/ folder
+The config defines the review plan, the name of the log file. See the src/configs/ folder
 ### Wave
 A wave is type of review.
 A wave has 3 fields.

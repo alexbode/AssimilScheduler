@@ -112,3 +112,11 @@ class AssimilScheduler:
         print(
             f"Lesson: {review.lesson_number}, {review.practice_type.name} ({review.practice_review_count}) [{review.lesson_review_count}]\n"
         )
+
+    def complete(self):
+        try:
+            l = next(self.review_generator(1))
+            self.logs.append_completed_lesson(l.lesson_number, l.practice_type)
+        except Exception as e:
+            print(e)
+            ValueError("Cannot complete next lesson: {e}")
