@@ -45,6 +45,8 @@ class AssimilScheduler:
         return q
 
     def calculate_projected_finish_date(self, upcoming_lesson_count: int) -> str:
+        if len(self.logs.log_file) == 0:
+            return "INF"
         now = datetime.now()
         thirty_days_ago = now - timedelta(days=30)
         lesson_completed_count_in_last_30_days = len(
@@ -108,5 +110,5 @@ class AssimilScheduler:
             f"{idx + 1}. Review {review.lesson_count} of {review.total_lessons} ({(review.lesson_count / review.total_lessons) * 100:.2f}%)"
         )
         print(
-            f"Lesson: {review.lesson_number}, {review.practice_type} ({review.practice_review_count}) [{review.lesson_review_count}]\n"
+            f"Lesson: {review.lesson_number}, {review.practice_type.name} ({review.practice_review_count}) [{review.lesson_review_count}]\n"
         )

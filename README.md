@@ -9,6 +9,19 @@ You can define multiple types of `waves` (listening, shadowing, reading, transla
 * `python3 -m unittest discover -s tests`
 
 ## Concepts
+### Logs
+A file in the `logs/` folder that logs the completed reviews one have done of the assimil course in a csv format. The log file is manually updated after each completed lesson/review. Example log file below:
+```
+date,lesson,practice_type
+2026-03-14,1,LISTEN
+2026-03-14,2,LISTEN
+2026-03-14,1,LISTEN
+2026-03-14,3,LISTEN
+2026-03-15,2,LISTEN
+2026-03-15,4,LISTEN
+```
+
+
 ### Config
 The config defines the review plan, the name of the log file. See the configs/ folder
 ### Wave
@@ -16,10 +29,92 @@ A wave is type of review.
 A wave has 3 fields.
 1. type
 2. weights
-
 3. filter
 
 #### Weights
 A way to manipulate the waves start date and frequency.
 
 #### filter
+A way to filter lessons out
+
+#### Examples
+Lets say there is an Assimil FakeLanguage course with 10 lessons. Below is a basic starting config
+
+```
+LESSON_COUNT=10
+config = AssimilCourseConfig(
+    name="FakeLanguage",
+    log_file="fake_language_log.txt",
+    lesson_count=LESSON_COUNT,
+    waves=[
+        Wave(
+            type=PracticeType.LISTEN,
+        ),
+    ],
+)
+```
+
+When `python3 main.py --course=FakeLanguage --next=5` is run it will return:
+
+```
+Lesson: 1, PracticeType.LISTEN
+Lesson: 2, PracticeType.LISTEN
+Lesson: 3, PracticeType.LISTEN
+Lesson: 4, PracticeType.LISTEN
+Lesson: 5, PracticeType.LISTEN
+```
+
+After doing the listening review for FakeLesson lesson 1 add: `2026-03-26,1,LISTEN` to the `fake_language_log.txt` log file.
+
+Then when `python3 main.py --course=FakeLanguage --next=5` is run again, it will return the below because lesson one was completed:
+
+```
+Lesson: 2, PracticeType.LISTEN
+Lesson: 3, PracticeType.LISTEN
+Lesson: 4, PracticeType.LISTEN
+Lesson: 5, PracticeType.LISTEN
+Lesson: 6, PracticeType.LISTEN
+```
+
+The now lets add a diferent type of review/wave to the config.
+
+```
+LESSON_COUNT=10
+config = AssimilCourseConfig(
+    name="FakeLanguage",
+    log_file="fake_language_log.txt",
+    lesson_count=LESSON_COUNT,
+    waves=[
+        Wave(
+            type=PracticeType.LISTEN,
+        ),
+        Wave(
+            type=PracticeType.READ,
+            filter=lambda x: x % 7 == 0,
+            weights=Weights(offset=2)
+        ),
+    ],
+)
+```
+
+Then when `python3 main.py --course=FakeLanguage --next=15` is run again, it will return the below. Notice how the offset=2 is set for the READ wave in the output below the READ lesson is 2 less than the previous LISTEN lesson. Also note how lesson 7 READ is skipped because of the filter is explicitly skipping every seventh lesson.
+
+```
+Lesson: 1, PracticeType.LISTEN
+Lesson: 2, PracticeType.LISTEN
+Lesson: 3, PracticeType.LISTEN
+Lesson: 1, PracticeType.READ
+Lesson: 4, PracticeType.LISTEN
+Lesson: 2, PracticeType.READ
+Lesson: 5, PracticeType.LISTEN
+Lesson: 3, PracticeType.READ
+Lesson: 6, PracticeType.LISTEN
+Lesson: 4, PracticeType.READ
+Lesson: 7, PracticeType.LISTEN
+Lesson: 5, PracticeType.READ
+Lesson: 8, PracticeType.LISTEN
+Lesson: 6, PracticeType.READ
+Lesson: 9, PracticeType.LISTEN
+```
+
+

@@ -41,7 +41,7 @@ class Wave:
     type: PracticeType
     weights: Weights = field(default_factory=Weights)
     # What lessons to ignore
-    filter: Callable[[int], bool] = lambda x: True
+    filter: Callable[[int], bool] = lambda x: False
 
 
 @dataclass
