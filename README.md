@@ -97,7 +97,7 @@ config = AssimilCourseConfig(
 )
 ```
 
-Then when `python3 main.py --course=FakeLanguage --next=15` is run again, it will return the below. Notice how the offset=2 is set for the READ wave in the output below the READ lesson is 2 less than the previous LISTEN lesson. Also note how lesson 7 READ is skipped because of the filter is explicitly skipping every seventh lesson.
+Then when `python3 main.py --course=FakeLanguage --next=16` is run again, it will return the below. Notice how the offset=2 is set for the READ wave in the output below the READ lesson is 2 less than the previous LISTEN lesson. Also note how lesson 7 READ is skipped because of the filter is explicitly skipping every seventh lesson.
 
 ```
 Lesson: 1, PracticeType.LISTEN
@@ -115,6 +115,7 @@ Lesson: 5, PracticeType.READ
 Lesson: 8, PracticeType.LISTEN
 Lesson: 6, PracticeType.READ
 Lesson: 9, PracticeType.LISTEN
+Lesson: 8, PracticeType.READ
 ```
 
 
