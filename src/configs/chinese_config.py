@@ -9,7 +9,6 @@ LESSON_COUNT = 105
 
 config = AssimilCourseConfig(
     name="Chinese",
-    log_file="chinese_log.txt",
     lesson_count=LESSON_COUNT,
     waves=[
         # LISTEN

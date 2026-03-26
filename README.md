@@ -9,21 +9,8 @@ You can define multiple types of `waves` (listening, shadowing, reading, transla
 * `python3 -m unittest discover -s tests`
 
 ## Concepts
-### Logs
-A file in the `logs/` folder that logs the completed reviews one have done of the assimil course in a csv format. The log file is manually updated after each completed lesson/review. Example log file below:
-```
-date,lesson,practice_type
-2026-03-14,1,LISTEN
-2026-03-14,2,LISTEN
-2026-03-14,1,LISTEN
-2026-03-14,3,LISTEN
-2026-03-15,2,LISTEN
-2026-03-15,4,LISTEN
-```
-
-
 ### Config
-The config defines the review plan, the name of the log file. See the src/configs/ folder
+The config defines the review plan. See the src/configs/ folder
 ### Wave
 A wave is type of review.
 A wave has 3 fields.
@@ -44,7 +31,6 @@ Lets say there is an Assimil FakeLanguage course with 10 lessons. Below is a bas
 LESSON_COUNT=10
 config = AssimilCourseConfig(
     name="FakeLanguage",
-    log_file="fake_language_log.txt",
     lesson_count=LESSON_COUNT,
     waves=[
         Wave(
@@ -64,7 +50,8 @@ Lesson: 4, PracticeType.LISTEN
 Lesson: 5, PracticeType.LISTEN
 ```
 
-After doing the listening review for FakeLesson lesson 1 add: `2026-03-26,1,LISTEN` to the `fake_language_log.txt` log file.
+After doing the listening review for FakeLesson lesson 1, to mark it complete run the command: `python3 main.py --course=FakeLanguage --complete`
+
 
 Then when `python3 main.py --course=FakeLanguage --next=5` is run again, it will return the below because lesson one was completed:
 
@@ -82,7 +69,6 @@ The now lets add a diferent type of review/wave to the config.
 LESSON_COUNT=10
 config = AssimilCourseConfig(
     name="FakeLanguage",
-    log_file="fake_language_log.txt",
     lesson_count=LESSON_COUNT,
     waves=[
         Wave(

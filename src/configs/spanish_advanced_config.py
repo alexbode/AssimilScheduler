@@ -9,7 +9,6 @@ LESSON_COUNT = 60
 
 config = AssimilCourseConfig(
     name="SpanishAdvanced",
-    log_file="spanish_advanced_log.txt",
     lesson_count=LESSON_COUNT,
     waves=[
         # LISTEN

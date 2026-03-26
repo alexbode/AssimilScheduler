@@ -1,4 +1,4 @@
-import importlib
+from importlib import util
 from pathlib import Path
 
 from src.schema import AssimilCourseConfig
@@ -22,9 +22,9 @@ class Configs:
         for file_path in target_dir.glob("*.py"):
             if file_path.name.startswith("__"):
                 continue
-            spec = importlib.util.spec_from_file_location(file_path.stem, file_path)
+            spec = util.spec_from_file_location(file_path.stem, file_path)
             if spec and spec.loader:
-                module = importlib.util.module_from_spec(spec)
+                module = util.module_from_spec(spec)
                 spec.loader.exec_module(module)
                 if hasattr(module, "config"):
                     configs.append(getattr(module, "config"))

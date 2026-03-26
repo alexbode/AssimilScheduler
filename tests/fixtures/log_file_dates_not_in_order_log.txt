@@ -1,4 +1,0 @@
-date,lesson,practice_type
-2026-03-14,1,LISTEN
-2026-03-16,2,LISTEN
-2026-03-15,3,LISTEN

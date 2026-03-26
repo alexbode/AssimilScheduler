@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from heapq import heappush, heappop
 from typing import Generator
 
-from src.log_reader import LogReader
+from src.db import DB
 from src.schema import AssimilCourseConfig, PracticeType
 
 
@@ -27,10 +27,10 @@ class AssimilScheduler:
         practice_review_count: int
         lesson_review_count: int
 
-    def __init__(self, course: str, logs: LogReader, config: AssimilCourseConfig):
+    def __init__(self, course: str, config: AssimilCourseConfig, db: DB = DB()):
         self.course = course
-        self.logs: LogReader = logs
         self.config: AssimilCourseConfig = config
+        self.db: DB = db
 
     def constuct_priority_queue(self) -> list[tuple[int, int, PracticeType]]:
         q = []
@@ -45,21 +45,23 @@ class AssimilScheduler:
         return q
 
     def calculate_projected_finish_date(self, upcoming_lesson_count: int) -> str:
-        if len(self.logs.log_file) == 0:
-            return "INF"
-        now = datetime.now()
-        thirty_days_ago = now - timedelta(days=30)
-        lesson_completed_count_in_last_30_days = len(
-            [d for d in self.logs.log_file if d[0] > thirty_days_ago]
-        )
-        earliest_date_in_last_30_days = min(
-            [d[0] for d in self.logs.log_file if d[0] > thirty_days_ago]
-        )
-        date_range = now - earliest_date_in_last_30_days
-        lesson_per_day = lesson_completed_count_in_last_30_days / date_range.days
-        return (now + timedelta(days=upcoming_lesson_count / lesson_per_day)).strftime(
-            "%Y-%m-%d"
-        )
+        # TODO implement projected finish date
+        return "Not implemented yet"
+        # if len(self.logs.log_file) == 0:
+        #     return "INF"
+        # now = datetime.now()
+        # thirty_days_ago = now - timedelta(days=30)
+        # lesson_completed_count_in_last_30_days = len(
+        #     [d for d in self.logs.log_file if d[0] > thirty_days_ago]
+        # )
+        # earliest_date_in_last_30_days = min(
+        #     [d[0] for d in self.logs.log_file if d[0] > thirty_days_ago]
+        # )
+        # date_range = now - earliest_date_in_last_30_days
+        # lesson_per_day = lesson_completed_count_in_last_30_days / date_range.days
+        # return (now + timedelta(days=upcoming_lesson_count / lesson_per_day)).strftime(
+        #     "%Y-%m-%d"
+        # )
 
     def review_generator(self, next_n: int) -> Generator[Review, int, None]:
         count = 0
@@ -67,7 +69,7 @@ class AssimilScheduler:
         pratice_counter = {}
         q = self.constuct_priority_queue()
         total_lessons = len(q)
-        completed_lessons = self.logs.completed_lessons()
+        completed_lessons = self.db.count_reviews(self.course)
         while q and next_n > 0:
             count += 1
             prioritized_lesson = heappop(q)
@@ -116,7 +118,16 @@ class AssimilScheduler:
     def complete(self):
         try:
             l = next(self.review_generator(1))
-            self.logs.append_completed_lesson(l.lesson_number, l.practice_type)
+            self.db.insert_review(
+                self.course,
+                datetime.now(),
+                l.practice_type,
+                l.lesson_number,
+            )
         except Exception as e:
             print(e)
             ValueError("Cannot complete next lesson: {e}")
+
+    def undo_last_review(self):
+        self.db.undo_last_review(self.course)
+
