@@ -6,6 +6,7 @@ You can define multiple types of `waves` (listening, shadowing, reading, transla
 
 ## How to run
 * `python3 main.py --course=SpanishAdvanced --next=5`
+* `uv run uvicorn server:app --reload --port=8080`
 * `python3 -m unittest discover -s tests`
 
 ## Concepts

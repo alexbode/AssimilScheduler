@@ -50,9 +50,6 @@ class DB:
     db_path = Path(__file__).parent / "db" / "assimil_scheduler.db"
 
     def __init__(self):
-        self.create_table()
-
-    def create_table(self):
         with sqlite3.connect(self.db_path) as c:
             cursor = c.cursor()
             cursor.execute(CREATE_TABLE_SQL_QUERY)
