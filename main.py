@@ -1,15 +1,15 @@
 import sys
 import argparse
 
-from src.configs import Configs
+from src.courses import Courses
 from src.scheduler import AssimilScheduler
 
 parser = argparse.ArgumentParser(description="CLI script for the Assimil scheduler.")
 parser.add_argument("--course", help="The name of the Assimil course. Use list configs to see available courses.")
 parser.add_argument(
-    "--list_configs",
+    "--list_courses",
     action="store_true",
-    help="List all configs in the configs folder.",
+    help="List all courses in the courses folder.",
 )
 parser.add_argument(
     "--next", type=int, default=4, help="Return next n lessons, default is 4."
@@ -28,15 +28,15 @@ parser.add_argument(
 if __name__ == "__main__":
     args = parser.parse_args()
 
-    configs = Configs()
+    courses = Courses()
 
-    if args.list_configs:
-        configs.list_configs()
+    if args.list_courses:
+        courses.list_courses()
         sys.exit(0)
 
     if args.course and args.next:
-        config = configs.get_config(args.course)
-        s = AssimilScheduler(config)
+        course = courses.get_course(args.course)
+        s = AssimilScheduler(course)
         if args.complete:
             s.complete()
             sys.exit(0)

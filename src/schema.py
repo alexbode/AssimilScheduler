@@ -4,7 +4,7 @@ from typing import Callable
 
 
 # The different ways to review an Assimil lesson
-class PracticeType(Enum):
+class ReviewType(Enum):
     # Listen to the audio blind, then while reading the translation,
     # then while reading the target text.
     LISTEN = auto()
@@ -38,15 +38,15 @@ class Weights:
 
 @dataclass
 class Wave:
-    type: PracticeType
+    type: ReviewType
     weights: Weights = field(default_factory=Weights)
     # What lessons to ignore
     filter: Callable[[int], bool] = lambda x: False
 
 
 @dataclass
-class AssimilCourseConfig:
-    # unique name for the config
+class AssimilCourse:
+    # unique name for the course
     name: str = ""
     # waves of review planned for assimil book ex.
     # first wave listen, second wave shadow, third wave scriptorium, etc.
@@ -55,4 +55,4 @@ class AssimilCourseConfig:
     lesson_count: int = 0
 
     def __repr__(self):
-        return f"AssimilCourseConfig<{self.name}>"
+        return f"AssimilCourse<{self.name}>"

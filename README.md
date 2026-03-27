@@ -39,7 +39,7 @@ config = AssimilCourseConfig(
     lesson_count=LESSON_COUNT,
     waves=[
         Wave(
-            type=PracticeType.LISTEN,
+            type=ReviewType.LISTEN,
         ),
     ],
 )
@@ -48,11 +48,11 @@ config = AssimilCourseConfig(
 When `python3 main.py --course=FakeLanguage --next=5` is run it will return:
 
 ```
-Lesson: 1, PracticeType.LISTEN
-Lesson: 2, PracticeType.LISTEN
-Lesson: 3, PracticeType.LISTEN
-Lesson: 4, PracticeType.LISTEN
-Lesson: 5, PracticeType.LISTEN
+Lesson: 1, ReviewType.LISTEN
+Lesson: 2, ReviewType.LISTEN
+Lesson: 3, ReviewType.LISTEN
+Lesson: 4, ReviewType.LISTEN
+Lesson: 5, ReviewType.LISTEN
 ```
 
 After doing the listening review for FakeLesson lesson 1, to mark it complete run the command: `python3 main.py --course=FakeLanguage --complete`
@@ -61,11 +61,11 @@ After doing the listening review for FakeLesson lesson 1, to mark it complete ru
 Then when `python3 main.py --course=FakeLanguage --next=5` is run again, it will return the below because lesson one was completed:
 
 ```
-Lesson: 2, PracticeType.LISTEN
-Lesson: 3, PracticeType.LISTEN
-Lesson: 4, PracticeType.LISTEN
-Lesson: 5, PracticeType.LISTEN
-Lesson: 6, PracticeType.LISTEN
+Lesson: 2, ReviewType.LISTEN
+Lesson: 3, ReviewType.LISTEN
+Lesson: 4, ReviewType.LISTEN
+Lesson: 5, ReviewType.LISTEN
+Lesson: 6, ReviewType.LISTEN
 ```
 
 The now lets add a diferent type of review/wave to the config.
@@ -77,10 +77,10 @@ config = AssimilCourseConfig(
     lesson_count=LESSON_COUNT,
     waves=[
         Wave(
-            type=PracticeType.LISTEN,
+            type=ReviewType.LISTEN,
         ),
         Wave(
-            type=PracticeType.READ,
+            type=ReviewType.READ,
             filter=lambda x: x % 7 == 0,
             weights=Weights(offset=2)
         ),
@@ -91,22 +91,22 @@ config = AssimilCourseConfig(
 Then when `python3 main.py --course=FakeLanguage --next=16` is run again, it will return the below. Notice how the offset=2 is set for the READ wave in the output below the READ lesson is 2 less than the previous LISTEN lesson. Also note how lesson 7 READ is skipped because of the filter is explicitly skipping every seventh lesson.
 
 ```
-Lesson: 1, PracticeType.LISTEN
-Lesson: 2, PracticeType.LISTEN
-Lesson: 3, PracticeType.LISTEN
-Lesson: 1, PracticeType.READ
-Lesson: 4, PracticeType.LISTEN
-Lesson: 2, PracticeType.READ
-Lesson: 5, PracticeType.LISTEN
-Lesson: 3, PracticeType.READ
-Lesson: 6, PracticeType.LISTEN
-Lesson: 4, PracticeType.READ
-Lesson: 7, PracticeType.LISTEN
-Lesson: 5, PracticeType.READ
-Lesson: 8, PracticeType.LISTEN
-Lesson: 6, PracticeType.READ
-Lesson: 9, PracticeType.LISTEN
-Lesson: 8, PracticeType.READ
+Lesson: 1, ReviewType.LISTEN
+Lesson: 2, ReviewType.LISTEN
+Lesson: 3, ReviewType.LISTEN
+Lesson: 1, ReviewType.READ
+Lesson: 4, ReviewType.LISTEN
+Lesson: 2, ReviewType.READ
+Lesson: 5, ReviewType.LISTEN
+Lesson: 3, ReviewType.READ
+Lesson: 6, ReviewType.LISTEN
+Lesson: 4, ReviewType.READ
+Lesson: 7, ReviewType.LISTEN
+Lesson: 5, ReviewType.READ
+Lesson: 8, ReviewType.LISTEN
+Lesson: 6, ReviewType.READ
+Lesson: 9, ReviewType.LISTEN
+Lesson: 8, ReviewType.READ
 ```
 
 

@@ -1,10 +1,10 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from dataclasses import dataclass
 from heapq import heappush, heappop
 from typing import Generator
 
 from src.db import DB
-from src.schema import AssimilCourseConfig, PracticeType
+from src.schema import AssimilCourse, ReviewType
 
 
 class AssimilScheduler:
@@ -13,7 +13,8 @@ class AssimilScheduler:
     class PrioritizedLesson:
         priority: float
         lesson: int
-        practice_type: PracticeType
+        review_type: ReviewType
+
 
         def __lt__(self, other):
             return self.priority < other.priority
@@ -23,18 +24,19 @@ class AssimilScheduler:
         lesson_count: int
         lesson_number: int
         total_lessons: int
-        practice_type: PracticeType
+        review_type: ReviewType
+
         practice_review_count: int
         lesson_review_count: int
 
-    def __init__(self, config: AssimilCourseConfig, db: DB = DB()):
-        self.config: AssimilCourseConfig = config
+    def __init__(self, course: AssimilCourse, db: DB = DB()):
+        self.course: AssimilCourse = course
         self.db: DB = db
 
-    def constuct_priority_queue(self) -> list[tuple[int, int, PracticeType]]:
+    def constuct_priority_queue(self) -> list[tuple[int, int, ReviewType]]:
         q = []
-        for lesson in range(1, self.config.lesson_count + 1):
-            for i, wave in enumerate(self.config.waves):
+        for lesson in range(1, self.course.lesson_count + 1):
+            for i, wave in enumerate(self.course.waves):
                 priority = wave.weights.get_weight(lesson) + i / 10000
                 if not wave.filter(lesson):
                     heappush(
@@ -68,11 +70,11 @@ class AssimilScheduler:
         pratice_counter = {}
         q = self.constuct_priority_queue()
         total_lessons = len(q)
-        completed_lessons = self.db.count_reviews(self.config.name)
+        completed_lessons = self.db.count_reviews(self.course.name)
         while q and next_n > 0:
             count += 1
             prioritized_lesson = heappop(q)
-            key = (prioritized_lesson.lesson, prioritized_lesson.practice_type.name)
+            key = (prioritized_lesson.lesson, prioritized_lesson.review_type.name)
             if prioritized_lesson.lesson not in lesson_counter:
                 lesson_counter[prioritized_lesson.lesson] = 0
             lesson_counter[prioritized_lesson.lesson] += 1
@@ -89,7 +91,7 @@ class AssimilScheduler:
                     count,
                     prioritized_lesson.lesson,
                     total_lessons,
-                    prioritized_lesson.practice_type,
+                    prioritized_lesson.review_type,
                     pratice_counter[key],
                     lesson_counter[prioritized_lesson.lesson],
                 )
@@ -105,22 +107,22 @@ class AssimilScheduler:
     def format_review(self, idx: int, review: Review):
         if idx == 0:
             print(
-                f"{self.config.name} - Projected Finish date: {self.calculate_projected_finish_date(review.total_lessons - review.lesson_count)}"
+                f"{self.course.name} - Projected Finish date: {self.calculate_projected_finish_date(review.total_lessons - review.lesson_count)}"
             )
         print(
             f"{idx + 1}. Review {review.lesson_count} of {review.total_lessons} ({(review.lesson_count / review.total_lessons) * 100:.2f}%)"
         )
         print(
-            f"Lesson: {review.lesson_number}, {review.practice_type.name} ({review.practice_review_count}) [{review.lesson_review_count}]\n"
+            f"Lesson: {review.lesson_number}, {review.review_type.name} ({review.practice_review_count}) [{review.lesson_review_count}]\n"
         )
 
     def complete(self):
         try:
             l = next(self.review_generator(1))
             self.db.insert_review(
-                self.config.name,
+                self.course.name,
                 datetime.now(),
-                l.practice_type,
+                l.review_type,
                 l.lesson_number,
             )
         except Exception as e:
@@ -128,5 +130,5 @@ class AssimilScheduler:
             ValueError("Cannot complete next lesson: {e}")
 
     def undo_last_review(self):
-        self.db.undo_last_review(self.config.name)
+        self.db.undo_last_review(self.course.name)
 

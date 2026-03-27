@@ -2,7 +2,7 @@ import sqlite3
 from pathlib import Path
 from datetime import datetime
 
-from src.schema import PracticeType
+from src.schema import ReviewType
 
 CREATE_TABLE_SQL_QUERY = """
 CREATE TABLE IF NOT EXISTS Reviews (
@@ -56,22 +56,21 @@ class DB:
             cursor.execute(CREATE_INDEX_SQL_QUERY)
 
     def insert_review(
-        self, course: str, date: datetime, practice_type: PracticeType, lesson: int
+        self, course: str, date: datetime, review_type: ReviewType, lesson: int
     ):
         with sqlite3.connect(self.db_path) as c:
             cursor = c.cursor()
             cursor.execute(
                 INSERT_REVIEW_SQL_QUERY,
-                (course.lower(), date.strftime("%Y-%m-%d"), practice_type.name, lesson),
+                (course.lower(), date.strftime("%Y-%m-%d"), review_type.name, lesson),
             )
 
-    def count_reviews(self, course: str) -> dict[tuple[PracticeType, int], int]:
+    def count_reviews(self, course: str) -> dict[tuple[ReviewType, int], int]:
         with sqlite3.connect(self.db_path) as c:
             cursor = c.cursor()
             cursor.execute(GET_REVIEW_COUNT_SQL_QUERY, (course.lower(),))
-            records = cursor.fetchall()
             output = {}
-            for row in records:
+            for row in cursor:
                 # (lesson, ParcticeType): Count
                 output[(row[1],row[0])] = row[2]
             return output
@@ -80,9 +79,8 @@ class DB:
         with sqlite3.connect(self.db_path) as c:
             cursor = c.cursor()
             cursor.execute(GET_REVIEW_COUNT_SQL_QUERY, (course.lower(),))
-            records = cursor.fetchall()
             output = {}
-            for row in records:
+            for row in cursor:
                 # lesson: Count
                 output[row[0]] = row[1]
             return output
