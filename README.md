@@ -4,10 +4,14 @@ This is a basic program to schedule the sequence of lessons for the [Assimil](ww
 
 You can define multiple types of `waves` (listening, shadowing, reading, translation, etc.) to review the Assimil textbook. And this program will keep track of where you are in each wave and which lesson to review next.
 
+## Dependencies
+* [uv](https://docs.astral.sh/uv/)
+
 ## How to run
-* `python3 main.py --course=SpanishAdvanced --next=5`
-* `uv run uvicorn server:app --reload --port=8080`
-* `python3 -m unittest discover -s tests`
+1. `uv sync`
+* script: `uv run python3 main.py --course=SpanishAdvanced --next=5`
+* server (under development): `uv run uvicorn server:app --reload --port=8080`
+* unittests: `python3 -m unittest discover -s tests`
 
 ## Concepts
 ### Config
