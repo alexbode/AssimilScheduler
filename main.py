@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
     if args.course and args.next:
         config = configs.get_config(args.course)
-        s = AssimilScheduler(config.name, config)
+        s = AssimilScheduler(config)
         if args.complete:
             s.complete()
             sys.exit(0)

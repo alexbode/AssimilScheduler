@@ -35,6 +35,16 @@ WHERE course = ?
 GROUP BY lesson;
 """
 
+GET_LATEST_REVIEW_SQL_QUERY = """
+SELECT id FROM Reviews WHERE course = ? ORDER BY id DESC LIMIT 1
+"""
+
+REMOVE_BY_ID_SQL_QUERY = """
+DELETE FROM Reviews WHERE id = ?
+"""
+
+
+
 
 class DB:
     db_path = Path(__file__).parent / "db" / "assimil_scheduler.db"
@@ -83,6 +93,6 @@ class DB:
     def undo_last_review(self, course: str):
         with sqlite3.connect(self.db_path) as c:
             cursor = c.cursor()
-            most_recent_row = cursor.execute(f"SELECT id FROM Reviews WHERE course = ? ORDER BY id DESC LIMIT 1", (course.lower(),)).fetchone()
+            most_recent_row = cursor.execute(GET_LATEST_REVIEW_SQL_QUERY, (course.lower(),)).fetchone()
             if most_recent_row:
-                cursor.execute(f"DELETE FROM Reviews WHERE id = ?", (most_recent_row[0],))
+                cursor.execute(REMOVE_BY_ID_SQL_QUERY, (most_recent_row[0],))

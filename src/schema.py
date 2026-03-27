@@ -53,8 +53,6 @@ class AssimilCourseConfig:
     waves: list[Wave] = field(default_factory=list)
     # number of lessons in the assimil course
     lesson_count: int = 0
-    # where completed lessons are logged
-    log_file: str = ""
 
     def __repr__(self):
         return f"AssimilCourseConfig<{self.name}>"

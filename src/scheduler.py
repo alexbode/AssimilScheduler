@@ -27,8 +27,7 @@ class AssimilScheduler:
         practice_review_count: int
         lesson_review_count: int
 
-    def __init__(self, course: str, config: AssimilCourseConfig, db: DB = DB()):
-        self.course = course
+    def __init__(self, config: AssimilCourseConfig, db: DB = DB()):
         self.config: AssimilCourseConfig = config
         self.db: DB = db
 
@@ -69,7 +68,7 @@ class AssimilScheduler:
         pratice_counter = {}
         q = self.constuct_priority_queue()
         total_lessons = len(q)
-        completed_lessons = self.db.count_reviews(self.course)
+        completed_lessons = self.db.count_reviews(self.config.name)
         while q and next_n > 0:
             count += 1
             prioritized_lesson = heappop(q)
@@ -119,7 +118,7 @@ class AssimilScheduler:
         try:
             l = next(self.review_generator(1))
             self.db.insert_review(
-                self.course,
+                self.config.name,
                 datetime.now(),
                 l.practice_type,
                 l.lesson_number,
@@ -129,5 +128,5 @@ class AssimilScheduler:
             ValueError("Cannot complete next lesson: {e}")
 
     def undo_last_review(self):
-        self.db.undo_last_review(self.course)
+        self.db.undo_last_review(self.config.name)
 
