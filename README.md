@@ -10,7 +10,7 @@ You can define multiple types of `waves` (listening, shadowing, reading, transla
 ## How to run
 1. `uv sync`
 * script: `uv run main.py --course=SpanishAdvanced --next=5`
-* server (under development): `uv run uvicorn server:app --reload --port=8080`
+* server (under development): `uv run server.py`
 * unittests: `python3 -m unittest discover -s tests`
 
 ## Concepts
