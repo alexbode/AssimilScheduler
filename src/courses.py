@@ -13,13 +13,12 @@ class Courses:
     """
 
     def __init__(self, path: str = Path(__file__).parent / "courses"):
-        self.courses_path: str = path
-        self.courses = self._import_courses()
+        self.path: Path = path
+        self.courses: list[AssimilCourse] = self._import_courses()
 
-    def _import_courses(self):
+    def _import_courses(self) -> list[AssimilCourse]:
         courses = []
-        target_dir = Path(self.courses_path)
-        for file_path in target_dir.glob("*.py"):
+        for file_path in self.path.glob("*.py"):
             if file_path.name.startswith("__"):
                 continue
             spec = util.spec_from_file_location(file_path.stem, file_path)
