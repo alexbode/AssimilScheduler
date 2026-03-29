@@ -11,7 +11,7 @@ You can define multiple types of `waves` (listening, shadowing, reading, transla
 1. `uv sync`
 * script: `uv run main.py --course=SpanishAdvanced --next=5`
 * server (under development): `uv run server.py`
-* unittests: `python3 -m unittest discover -s tests`
+* unittests: `uv run pytest`
 
 ## Concepts
 ### Config
