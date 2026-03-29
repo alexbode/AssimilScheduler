@@ -15,7 +15,6 @@ class AssimilScheduler:
         lesson: int
         review_type: ReviewType
 
-
         def __lt__(self, other):
             return self.priority < other.priority
 
@@ -131,4 +130,3 @@ class AssimilScheduler:
 
     def undo_last_review(self):
         self.db.undo_last_review(self.course.name)
-

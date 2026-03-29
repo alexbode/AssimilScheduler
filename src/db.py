@@ -44,8 +44,6 @@ DELETE FROM Reviews WHERE id = ?
 """
 
 
-
-
 class DB:
     db_path = Path(__file__).parent / "db" / "assimil_scheduler.db"
 
@@ -72,7 +70,7 @@ class DB:
             output = {}
             for row in cursor:
                 # (lesson, ParcticeType): Count
-                output[(row[1],row[0])] = row[2]
+                output[(row[1], row[0])] = row[2]
             return output
 
     def count_lessons(self, course: str) -> dict[int, int]:
@@ -88,6 +86,8 @@ class DB:
     def undo_last_review(self, course: str):
         with sqlite3.connect(self.db_path) as c:
             cursor = c.cursor()
-            most_recent_row = cursor.execute(GET_LATEST_REVIEW_SQL_QUERY, (course.lower(),)).fetchone()
+            most_recent_row = cursor.execute(
+                GET_LATEST_REVIEW_SQL_QUERY, (course.lower(),)
+            ).fetchone()
             if most_recent_row:
                 cursor.execute(REMOVE_BY_ID_SQL_QUERY, (most_recent_row[0],))
