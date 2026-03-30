@@ -51,7 +51,7 @@ course = AssimilCourse(
             filter=lambda x: x % 7 == 0,
         ),
         Wave(
-            type=ReviewType.SHADOW,
+            type=ReviewType.SHADOW_BLIND,
             weights=Weights(offset=70, multiplier=1.5),
             filter=lambda x: x % 7 == 0,
         ),

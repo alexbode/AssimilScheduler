@@ -3,22 +3,38 @@ from dataclasses import dataclass, field
 from typing import Callable
 
 
-# The different ways to review an Assimil lesson
 class ReviewType(Enum):
+    """
+    Different ways to review an Assimil lesson
+
+    Ideal order of review:
+    1. Listen
+    2. Read
+    3. Translate
+    4. Grammar
+    5. Shadow with text
+    6. Scriptorium
+    ---
+    7. Transcribe
+    8. Shadow blind
+    9. Reverse translate
+    """
     # Listen to the audio blind, then while reading the translation,
     # then while reading the target text.
     LISTEN = auto()
-    # Shadow the audio blind for 2 passes.
+    # Shadow the audio while reading the target text for 2 passes.
     SHADOW = auto()
+    # Shadow the audio blind for 2 passes.
+    SHADOW_BLIND = auto()
     # Read the target text aloud and grammar points.
     READ = auto()
     # Copy the target language text while repeating aloud.
     SCRIPTORIUM = auto()
-    # Translate from the target language
+    # Translate from the target language (text to text).
     TRANSLATE = auto()
-    # Translate to the target language.
+    # Translate to the target language (text to text).
     REVERSE_TRANSLATE = auto()
-    # Listen to audio and transcribe what you hear in the target language.
+    # Listen to audio and write what you hear in the target language.
     TRANSCRIBE = auto()
     # Review grammar points without looking at the text.
     GRAMMAR_POINTS = auto()

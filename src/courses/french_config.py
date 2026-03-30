@@ -60,12 +60,12 @@ course = AssimilCourse(
             filter=lambda x: x % 7 == 0,
         ),
         Wave(
-            type=ReviewType.SHADOW,
+            type=ReviewType.SHADOW_BLIND,
             weights=Weights(offset=80, multiplier=1.5),
             filter=lambda x: x % 7 == 0,
         ),
         Wave(
-            type=ReviewType.SHADOW,
+            type=ReviewType.SHADOW_BLIND,
             weights=Weights(offset=90, multiplier=1.5),
             filter=lambda x: x % 7 == 0,
         ),
@@ -74,11 +74,6 @@ course = AssimilCourse(
         Wave(
             type=ReviewType.SCRIPTORIUM,
             weights=Weights(offset=30),
-            filter=lambda x: x % 7 == 0,
-        ),
-        Wave(
-            type=ReviewType.SCRIPTORIUM,
-            weights=Weights(offset=40, multiplier=1.5),
             filter=lambda x: x % 7 == 0,
         ),
         # TRANSLATE
