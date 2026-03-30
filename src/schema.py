@@ -18,6 +18,10 @@ class ReviewType(Enum):
     TRANSLATE = auto()
     # Translate to the target language.
     REVERSE_TRANSLATE = auto()
+    # Listen to audio and transcribe what you hear in the target language.
+    TRANSCRIBE = auto()
+    # Review grammar points without looking at the text.
+    GRAMMAR_POINTS = auto()
 
 
 @dataclass
