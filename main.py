@@ -30,7 +30,7 @@ parser.add_argument(
     "--undo",
     "-u",
     action="store_true",
-    help="Unmark the latest lesson as completed.",
+    help="Unmark the latest lesson as done.",
 )
 
 if __name__ == "__main__":
@@ -45,8 +45,8 @@ if __name__ == "__main__":
     if args.course and args.next:
         course = courses.get_course(args.course)
         s = AssimilScheduler(course)
-        if args.complete:
-            s.complete()
+        if args.done:
+            s.mark_as_done()
             sys.exit(0)
         if args.undo:
             s.undo_last_review()

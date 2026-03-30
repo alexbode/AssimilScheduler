@@ -115,7 +115,7 @@ class AssimilScheduler:
             f"Lesson: {review.lesson_number}, {review.review_type.name} ({review.practice_review_count}) [{review.lesson_review_count}]\n"
         )
 
-    def complete(self):
+    def mark_as_done(self):
         try:
             l = next(self.review_generator(1))
             self.db.insert_review(
@@ -125,8 +125,7 @@ class AssimilScheduler:
                 l.lesson_number,
             )
         except Exception as e:
-            print(e)
-            ValueError("Cannot complete next lesson: {e}")
+            ValueError("Cannot mark as done the next lesson: {e}")
 
     def undo_last_review(self):
         self.db.undo_last_review(self.course.name)

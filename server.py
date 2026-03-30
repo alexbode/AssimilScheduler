@@ -12,7 +12,7 @@ async def read_root():
 
 
 app.mount(
-    "/static", StaticFiles(directory="static", follow_symlink=True), name="static"
+    "/static", StaticFiles(directory="static"), name="static"
 )
 
 

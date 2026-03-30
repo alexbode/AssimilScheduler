@@ -30,14 +30,14 @@ class DataFetcher extends HTMLElement {
         this.shadowRoot.innerHTML = `
             <style>
                 .card {
-                    background: white;
+                    background: var(--bg-color)
                     padding: 20px;
                     border-radius: 8px;
                     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
                     text-align: center;
                 }
                 h2 { color: #333; }
-                p { color: #009688; font-weight: bold; }
+                p { color: var(--text-color); font-weight: bold; }
             </style>
             
             <div class="card">
