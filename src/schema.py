@@ -59,7 +59,7 @@ class Weights:
 
 @dataclass
 class Wave:
-    type: ReviewType
+    review_type: ReviewType
     weights: Weights = field(default_factory=Weights)
     # What lessons to ignore
     filter: Callable[[int], bool] = lambda x: False
@@ -127,3 +127,16 @@ class Review:
             "previous_lesson_reviews_completed": self.previous_lesson_reviews_completed,
             "wave_index": self.wave_index,
         }
+
+
+@dataclass
+class PrioritizedLesson:
+    priority: float
+    lesson: int
+    review_type: ReviewType
+    wave_index: int
+    review_count: int = 0
+    lesson_count: int = 0
+
+    def __lt__(self, other):
+        return self.priority < other.priority

@@ -5,13 +5,12 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from src.cache import Cache
 from src.courses import Courses
 from src.scheduler import AssimilScheduler
 
 app = FastAPI()
 courses = Courses()
-cache = Cache()
+
 
 def stringify_exceptions(func):
     @wraps(func)
@@ -20,12 +19,8 @@ def stringify_exceptions(func):
             return await func(*args, **kwargs)
         except Exception as e:
             return {"error": str(e), "status": "error"}
-    return wrapper
 
-@app.get("/api/v1/message")
-@stringify_exceptions
-async def read_root():
-    return {"message": "Hello from FastAPI!", "status": "success"}
+    return wrapper
 
 
 @app.get("/api/v1/courses")
@@ -38,16 +33,17 @@ async def list_courses():
 @stringify_exceptions
 async def next_review(course: str):
     course = courses.get_course(course)
-    s = AssimilScheduler(course, cache=cache)
+    s = AssimilScheduler(course)
     next_review_lesson = next(s.review_generator(next_n=1))
     return {"courses": next_review_lesson.to_dict(), "status": "success"}
+
 
 # query param ?next_n=4
 @app.get("/api/v1/next_reviews/{course}")
 @stringify_exceptions
 async def next_review(course: str, next_n: int = 4):
     course = courses.get_course(course)
-    s = AssimilScheduler(course, cache=cache)
+    s = AssimilScheduler(course)
     next_n = min(next_n, 100)
     output = []
     for review in s.review_generator(next_n=next_n):

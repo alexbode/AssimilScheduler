@@ -14,11 +14,11 @@ class DataFetcher extends HTMLElement {
     async fetchData() {
         try {
             // Call the FastAPI endpoint
-            const response = await fetch('/api/v1/message');
+            const response = await fetch('/api/v1/courses');
             const data = await response.json();
             
             // Render the returned data
-            this.render(data.message);
+            this.render(data.courses);
         } catch (error) {
             this.render('Error fetching data.');
             console.error(error);
