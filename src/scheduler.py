@@ -4,7 +4,8 @@ from heapq import heappush, heappop
 from typing import Generator
 
 from src.db import DB
-from src.schema import AssimilCourse, ReviewType
+from src.cache import Cache
+from src.schema import AssimilCourse, ReviewType, Review
 
 
 class AssimilScheduler:
@@ -14,25 +15,20 @@ class AssimilScheduler:
         priority: float
         lesson: int
         review_type: ReviewType
+        wave_index: int
 
         def __lt__(self, other):
             return self.priority < other.priority
 
-    @dataclass
-    class Review:
-        lesson_count: int
-        lesson_number: int
-        total_lessons: int
-        review_type: ReviewType
-
-        practice_review_count: int
-        lesson_review_count: int
-
-    def __init__(self, course: AssimilCourse, db: DB = DB()):
+    def __init__(self, course: AssimilCourse, db: DB = DB(), cache=Cache()):
         self.course: AssimilCourse = course
         self.db: DB = db
+        self.cache: Cache = cache
 
     def constuct_priority_queue(self) -> list[tuple[int, int, ReviewType]]:
+        if self.cache.has(self.course.name):
+            return self.cache.get(self.course.name)
+        print(f"Constructing priority queue for course {self.course.name} with {self.course.lesson_count} lessons and {len(self.course.waves)} waves")
         q = []
         for lesson in range(1, self.course.lesson_count + 1):
             for i, wave in enumerate(self.course.waves):
@@ -40,28 +36,12 @@ class AssimilScheduler:
                 if not wave.filter(lesson):
                     heappush(
                         q,
-                        AssimilScheduler.PrioritizedLesson(priority, lesson, wave.type),
+                        AssimilScheduler.PrioritizedLesson(
+                            priority, lesson, wave.type, i
+                        ),
                     )
+        self.cache.set(self.course.name, q)
         return q
-
-    def calculate_projected_finish_date(self, upcoming_lesson_count: int) -> str:
-        # TODO implement projected finish date
-        return "Not implemented yet"
-        # if len(self.logs.log_file) == 0:
-        #     return "INF"
-        # now = datetime.now()
-        # thirty_days_ago = now - timedelta(days=30)
-        # lesson_completed_count_in_last_30_days = len(
-        #     [d for d in self.logs.log_file if d[0] > thirty_days_ago]
-        # )
-        # earliest_date_in_last_30_days = min(
-        #     [d[0] for d in self.logs.log_file if d[0] > thirty_days_ago]
-        # )
-        # date_range = now - earliest_date_in_last_30_days
-        # lesson_per_day = lesson_completed_count_in_last_30_days / date_range.days
-        # return (now + timedelta(days=upcoming_lesson_count / lesson_per_day)).strftime(
-        #     "%Y-%m-%d"
-        # )
 
     def review_generator(self, next_n: int) -> Generator[Review, int, None]:
         count = 0
@@ -86,34 +66,21 @@ class AssimilScheduler:
                 if completed_lessons[key] <= 0:
                     del completed_lessons[key]
             else:
-                yield AssimilScheduler.Review(
-                    count,
-                    prioritized_lesson.lesson,
-                    total_lessons,
-                    prioritized_lesson.review_type,
-                    pratice_counter[key],
-                    lesson_counter[prioritized_lesson.lesson],
+                yield Review(
+                    course=self.course.name,
+                    lesson=prioritized_lesson.lesson,
+                    review_type=prioritized_lesson.review_type,
+                    review_count=count,
+                    total_review_count=total_lessons,
+                    percent_complete=(count / total_lessons) * 100,
+                    previous_reviews_completed=pratice_counter[key],
+                    previous_lesson_reviews_completed=lesson_counter[
+                        prioritized_lesson.lesson
+                    ],
+                    wave_index=prioritized_lesson.wave_index,
                 )
                 next_n -= 1
         return
-
-    def get_next_lesson(self, next_n: int):
-        idx = 0
-        for review in self.review_generator(next_n):
-            self.format_review(idx, review)
-            idx += 1
-
-    def format_review(self, idx: int, review: Review):
-        if idx == 0:
-            print(
-                f"{self.course.name} - Projected Finish date: {self.calculate_projected_finish_date(review.total_lessons - review.lesson_count)}"
-            )
-        print(
-            f"{idx + 1}. Review {review.lesson_count} of {review.total_lessons} ({(review.lesson_count / review.total_lessons) * 100:.2f}%)"
-        )
-        print(
-            f"Lesson: {review.lesson_number}, {review.review_type.name} ({review.practice_review_count}) [{review.lesson_review_count}]\n"
-        )
 
     def mark_as_done(self):
         try:

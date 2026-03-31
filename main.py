@@ -39,7 +39,8 @@ if __name__ == "__main__":
     courses = Courses()
 
     if args.list_courses:
-        courses.list_courses()
+        for c in courses.list_courses():
+            print(c)
         sys.exit(0)
 
     if args.course and args.next:
@@ -51,5 +52,9 @@ if __name__ == "__main__":
         if args.undo:
             s.undo_last_review()
             sys.exit(0)
-        s.get_next_lesson(next_n=args.next)
+        idx = 0
+        for review in s.review_generator(args.next):
+            idx += 1
+            print(f"{idx}.")
+            print(review)
         sys.exit(0)

@@ -19,6 +19,7 @@ class ReviewType(Enum):
     8. Shadow blind
     9. Reverse translate
     """
+
     # Listen to the audio blind, then while reading the translation,
     # then while reading the target text.
     LISTEN = auto()
@@ -76,3 +77,53 @@ class AssimilCourse:
 
     def __repr__(self):
         return f"AssimilCourse<{self.name}>"
+
+    def __eq__(self, other):
+        return self.name == other.name
+
+    def __hash__(self):
+        return hash(self.name)
+
+
+@dataclass
+class Review:
+    """
+    Example output:
+    Review 34 of 536 (6.34%)
+    Lesson: 9, READ (1) [3]
+
+    course: "French"
+    lesson: 9
+    review_type: ReviewType.READ
+    review_count: 34
+    total_review_count: 536
+    percent_complete: 6.34
+    previous_reviews_completed: 1
+    previous_lesson_reviews_completed: 3
+    """
+
+    course: str
+    lesson: int
+    review_type: ReviewType
+    review_count: int
+    total_review_count: int
+    percent_complete: float
+    previous_reviews_completed: int
+    previous_lesson_reviews_completed: int
+    wave_index: int
+
+    def __repr__(self):
+        return f"Review {self.review_count} of {self.total_review_count} ({self.percent_complete:.2f}%) \nLesson: {self.lesson}, {self.review_type.name} ({self.previous_reviews_completed}) [{self.previous_lesson_reviews_completed}]\n"
+
+    def to_dict(self):
+        return {
+            "course": self.course,
+            "lesson": self.lesson,
+            "review_type": self.review_type.name,
+            "review_count": self.review_count,
+            "total_review_count": self.total_review_count,
+            "percent_complete": self.percent_complete,
+            "previous_reviews_completed": self.previous_reviews_completed,
+            "previous_lesson_reviews_completed": self.previous_lesson_reviews_completed,
+            "wave_index": self.wave_index,
+        }

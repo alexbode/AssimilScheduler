@@ -29,13 +29,13 @@ class Courses:
                     courses.append(getattr(module, "course"))
         if not courses:
             raise ValueError("No courses found.")
-        if len(set([c.name for c in courses])) != len(courses):
+        if len(set([c.name.lower() for c in courses])) != len(courses):
             raise ValueError("Duplicate course names found.")
         return courses
 
     def get_course(self, course: str) -> AssimilCourse:
         for c in self.courses:
-            if c.name == course:
+            if c.name.lower() == course.lower():
                 return c
         courses = [c.name for c in self.courses]
         raise ValueError(
@@ -43,5 +43,7 @@ class Courses:
         )
 
     def list_courses(self):
+        output = []
         for course in self.courses:
-            print(course.name)
+            output.append(course.name)
+        return output

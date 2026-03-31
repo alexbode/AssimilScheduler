@@ -76,6 +76,13 @@ course = AssimilCourse(
             weights=Weights(offset=30),
             filter=lambda x: x % 7 == 0,
         ),
+        # TRANSCRIBE
+        #
+        Wave(
+            type=ReviewType.TRANSCRIBE,
+            weights=Weights(offset=35, multiplier=1.5),
+            filter=lambda x: x % 7 == 0,
+        ),
         # TRANSLATE
         #
         Wave(
