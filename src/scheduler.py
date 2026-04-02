@@ -19,11 +19,8 @@ class AssimilScheduler:
         self.course: AssimilCourse = course
         self.db: DB = db
         self.q: PriorityQueue = priority_queue
-        print(f"Constructing priority queue for course {course.name}...")
         self.q.construct_priority_queue(course)
-        print(f"Priority queue constructed with {len(self.q.q)} lessons.")
         self.q.update_state(self.db.count_reviews(self.course.name))
-        print(f"Priority queue state updated with completed reviews from DB.")
 
     def review_generator(self, next_n: int) -> Generator[Review, int, None]:
         for r in self.q.get_next(next_n):

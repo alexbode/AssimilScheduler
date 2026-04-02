@@ -6,6 +6,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from src.courses import Courses
+from src.priority_queue import PriorityQueue
 from src.scheduler import AssimilScheduler
 
 app = FastAPI()
@@ -45,6 +46,7 @@ async def next_review(course: str, next_n: int = 4):
     course = courses.get_course(course)
     s = AssimilScheduler(course)
     next_n = min(next_n, 100)
+    next_n = max(next_n, 1)
     output = []
     for review in s.review_generator(next_n=next_n):
         if next_n <= 0:
@@ -60,6 +62,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 @app.get("/")
 async def serve_index():
     return FileResponse("static/index.html")
+
+@app.get("/favicon.ico")
+async def serve_index():
+    return FileResponse("static/favicon.ico")
 
 
 if __name__ == "__main__":

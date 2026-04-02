@@ -1,13 +1,16 @@
+from typing import Generator
+
 from src.schema import PrioritizedLesson, AssimilCourse, Review
 
 
 class PriorityQueue:
     def __init__(self):
         self.q: list[PrioritizedLesson] = []
-        self.index = 0
-        self.course_name = None
+        self.index: int = 0
+        self.course_name: str = None
 
     def construct_priority_queue(self, course: AssimilCourse):
+        self.reset_state()
         self.course_name = course.name
         for lesson in range(1, course.lesson_count + 1):
             for i, wave in enumerate(course.waves):
@@ -37,8 +40,7 @@ class PriorityQueue:
             lesson_counter[pl.lesson] += 1
             pl.review_count = review_counter[key]
             pl.lesson_count = lesson_counter[pl.lesson]
-
-        print(f"Priority qqueue constructed with {len(self.q)} lessons.")
+        return
 
     def update_state(self, completed_lessons: dict[tuple[int, str], int]):
         while self.index < len(self.q):
@@ -51,16 +53,14 @@ class PriorityQueue:
                 self.index += 1
             else:
                 break
-
-        print(f"Priority queue state updated with completed reviews from DB. Current index: {self.index}")
         return
 
-    def peek(self):
+    def peek(self) -> Review:
         if self.index >= len(self.q):
             raise IndexError("PriorityQueue is empty")
         return self.get_review(self.index)
 
-    def get_next(self, n: int):
+    def get_next(self, n: int) -> Generator[Review, int, None]:
         index = self.index
         while n > 0 and index < len(self.q):
             yield self.get_review(index)
@@ -83,3 +83,8 @@ class PriorityQueue:
             previous_lesson_reviews_completed=prioritized_lesson.lesson_count,
             wave_index=prioritized_lesson.wave_index,
         )
+
+    def reset_state(self):
+        self.index = 0
+        self.q = []
+        return
