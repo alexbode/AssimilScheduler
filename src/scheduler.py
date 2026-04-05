@@ -41,3 +41,12 @@ class AssimilScheduler:
 
     def undo_last_review(self):
         self.db.undo_last_review(self.course.name)
+
+    def manual_update(self, lesson: int, review_type: ReviewType):
+        review_type = ReviewType[review_type] 
+        self.db.insert_review(
+            self.course.name,
+            datetime.now(),
+            review_type,
+            lesson,
+        )

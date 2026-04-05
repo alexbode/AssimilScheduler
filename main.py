@@ -33,6 +33,14 @@ parser.add_argument(
     help="Unmark the latest lesson as done.",
 )
 
+parser.add_argument(
+    "--manual_update",
+    "-m",
+    nargs=2,
+    metavar=("LESSON", "REVIEW_TYPE"),
+    help="Manually update the review count for a specific lesson and review type. Example: --manual_update 5 LISTEN",
+)
+
 if __name__ == "__main__":
     args = parser.parse_args()
 
@@ -46,8 +54,13 @@ if __name__ == "__main__":
     if args.course and args.next:
         course = courses.get_course(args.course)
         s = AssimilScheduler(course)
-        if args.done:
+        if args.done and not args.manual_update:
             s.mark_as_done()
+            sys.exit(0)
+        if args.done and args.manual_update:
+            lesson = int(args.manual_update[0])
+            review_type = args.manual_update[1]
+            s.manual_update(lesson, review_type)
             sys.exit(0)
         if args.undo:
             s.undo_last_review()
