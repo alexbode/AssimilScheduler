@@ -8,6 +8,7 @@ class PriorityQueue:
         self.q: list[PrioritizedLesson] = []
         self.index: int = 0
         self.course_name: str = None
+        self.completed_lessons: dict[tuple[int, str], int] = {}
 
     def construct_priority_queue(self, course: AssimilCourse):
         self.reset_state()
@@ -42,14 +43,19 @@ class PriorityQueue:
             pl.lesson_count = lesson_counter[pl.lesson]
         return
 
+    # TODO: state is not update when callingthe get_next method. only the update_state method
+    def _increment_completed_lesson(self, lesson: int, review_type: str):
+        pass
+
     def update_state(self, completed_lessons: dict[tuple[int, str], int]):
+        self.completed_lessons = completed_lessons
         while self.index < len(self.q):
             prioritized_lesson = self.peek()
             key = (prioritized_lesson.lesson, prioritized_lesson.review_type.name)
-            if key in completed_lessons:
-                completed_lessons[key] -= 1
-                if completed_lessons[key] <= 0:
-                    del completed_lessons[key]
+            if key in self.completed_lessons:
+                self.completed_lessons[key] -= 1
+                if self.completed_lessons[key] <= 0:
+                    del self.completed_lessons[key]
                 self.index += 1
             else:
                 break

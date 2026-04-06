@@ -32,7 +32,6 @@ parser.add_argument(
     action="store_true",
     help="Unmark the latest lesson as done.",
 )
-
 parser.add_argument(
     "--manual_update",
     "-m",
