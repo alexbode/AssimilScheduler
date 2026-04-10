@@ -3,7 +3,6 @@ from pathlib import Path
 
 from src.courses import Courses
 
-
 class TestCourses(unittest.TestCase):
 
     fixtures_folder = Path(__file__).parent / "fixtures"

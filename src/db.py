@@ -43,6 +43,11 @@ REMOVE_BY_ID_SQL_QUERY = """
 DELETE FROM Reviews WHERE id = ?
 """
 
+GET_ALL_REVIEWS_SQL_QUERY = """
+SELECT date, lesson, practice_type
+FROM Reviews 
+WHERE course = ? 
+"""
 
 class DB:
     db_path = Path(__file__).parent / "db" / "assimil_scheduler.db"
@@ -69,14 +74,14 @@ class DB:
             cursor.execute(GET_REVIEW_COUNT_SQL_QUERY, (course.lower(),))
             output = {}
             for row in cursor:
-                # (lesson, ParcticeType): Count
+                # (lesson, ReviewType): Count
                 output[(row[1], row[0])] = row[2]
             return output
 
     def count_lessons(self, course: str) -> dict[int, int]:
         with sqlite3.connect(self.db_path) as c:
             cursor = c.cursor()
-            cursor.execute(GET_REVIEW_COUNT_SQL_QUERY, (course.lower(),))
+            cursor.execute(GET_LESSON_COUNT_SQL_QUERY, (course.lower(),))
             output = {}
             for row in cursor:
                 # lesson: Count
@@ -91,3 +96,12 @@ class DB:
             ).fetchone()
             if most_recent_row:
                 cursor.execute(REMOVE_BY_ID_SQL_QUERY, (most_recent_row[0],))
+
+    def get_all_reviews(self, course: str) -> list[tuple[str, ReviewType, int]]:
+        with sqlite3.connect(self.db_path) as c:
+            cursor = c.cursor()
+            cursor.execute(GET_ALL_REVIEWS_SQL_QUERY, (course.lower(),))
+            output = []
+            for row in cursor:
+                output.append((row[0], row[1], ReviewType[row[2]]))
+            return output
