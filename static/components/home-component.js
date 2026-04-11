@@ -25,9 +25,11 @@ class HomeComponent extends HTMLElement {
             text += `<h2><a href=/${this.pascalToKebab(courses[i])} style="text-decoration: none; color: inherit;">${courses[i]}</a></h1>`;
         }
         this.shadowRoot.innerHTML = `
-            <div class="card">
-                <h1>Assimil Scheduler</h2>
-                ${text}
+            <div class="grid-container">
+                <div class="center-cell">
+                    <h1>Assimil Scheduler</h1>
+                    ${text}
+                </div>
             </div>
         `;
     }

@@ -89,6 +89,14 @@ async def complete_review(course: str):
     s.mark_as_done()
     return {"status": "success"}
 
+@app.get("/api/v1/undo_review/{course}")
+@stringify_exceptions
+async def undo_review(course: str):
+    course = courses.get_course(course)
+    s = AssimilScheduler(course, db=db)
+    s.undo_last_review()
+    return {"status": "success"}
+
 
 # query param ?next_n=4
 @app.get("/api/v1/next_reviews/{course}")
@@ -112,12 +120,12 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
 async def serve_index():
-    return FileResponse("static/home-page.html")
+    return FileResponse("static/pages/home-page.html")
 
 
 @app.get("/{course}")
 async def serve_index():
-    return FileResponse("static/language-page.html")
+    return FileResponse("static/pages/language-page.html")
 
 
 @app.get("/favicon.ico")

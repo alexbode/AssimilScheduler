@@ -54,7 +54,7 @@ class Weights:
     multiplier: int = 1
 
     def get_weight(self, lesson: int) -> int:
-        return self.multiplier * lesson + self.offset
+        return self.multiplier * lesson + max(self.offset - 1, 0)
 
 
 @dataclass
