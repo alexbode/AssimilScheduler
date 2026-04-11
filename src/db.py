@@ -55,6 +55,9 @@ FROM Reviews
 GROUP BY date, course
 """
 
+DELETE_COURSE_SQL_QUERY = """
+DELETE FROM Reviews WHERE course = ?
+"""
 
 class DB:
     db_path = Path(__file__).parent / "db" / "assimil_scheduler.db"
@@ -123,3 +126,8 @@ class DB:
             for row in cursor:
                 output.append((row[0], datetime.strptime(row[1], "%Y-%m-%d"), row[2]))
             return output
+
+    def delete_course(self, course: str):
+        with sqlite3.connect(self.db_path) as c:
+            cursor = c.cursor()
+            cursor.execute(DELETE_COURSE_SQL_QUERY, (course.lower(),))
