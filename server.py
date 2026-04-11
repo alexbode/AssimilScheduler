@@ -36,6 +36,17 @@ async def get_review_type_map():
     }
 
 
+@app.get("/api/v1/courses_review_counts")
+@stringify_exceptions
+async def get_courses_review_counts():
+    course = courses.get_course(course)
+    s = AssimilScheduler(course, db=db)
+    return {
+        "response": s.get_courses_review_counts(),
+        "status": "success",
+    }
+
+
 @app.get("/api/v1/get_course/{course}")
 @stringify_exceptions
 async def get_course(course: str):
@@ -70,6 +81,15 @@ async def next_review(course: str):
     return {"response": next_review_lesson.to_dict(), "status": "success"}
 
 
+@app.get("/api/v1/complete_review/{course}")
+@stringify_exceptions
+async def complete_review(course: str):
+    course = courses.get_course(course)
+    s = AssimilScheduler(course, db=db)
+    s.mark_as_done()
+    return {"status": "success"}
+
+
 # query param ?next_n=4
 @app.get("/api/v1/next_reviews/{course}")
 @stringify_exceptions
@@ -92,7 +112,12 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
 async def serve_index():
-    return FileResponse("static/index.html")
+    return FileResponse("static/home-page.html")
+
+
+@app.get("/{course}")
+async def serve_index():
+    return FileResponse("static/language-page.html")
 
 
 @app.get("/favicon.ico")

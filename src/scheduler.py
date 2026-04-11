@@ -53,3 +53,6 @@ class AssimilScheduler:
 
     def get_all_reviews(self, course: str) -> list[int]:
         return self.db.get_all_reviews(course)
+
+    def get_courses_review_counts(self) -> dict[str, int]:
+        return self.db.get_courses_review_counts()
