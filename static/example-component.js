@@ -14,7 +14,8 @@ class DataFetcher extends HTMLElement {
     async fetchData() {
         try {
             // Call the FastAPI endpoint
-            const response = await fetch('/api/v1/courses');
+            // const response = await fetch('/api/v1/courses');
+            const response = await fetch('/api/v1/reviews/Chinese');
             const data = await response.json();
             
             // Render the returned data

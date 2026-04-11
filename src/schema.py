@@ -84,6 +84,22 @@ class AssimilCourse:
     def __hash__(self):
         return hash(self.name)
 
+    def to_json(self):
+        return {
+            "name": self.name,
+            "waves": [
+                {
+                    "review_type": wave.review_type.name,
+                    "weights": {
+                        "offset": wave.weights.offset,
+                        "multiplier": wave.weights.multiplier,
+                    },
+                }
+                for wave in self.waves
+            ],
+            "lesson_count": self.lesson_count,
+        }
+
 
 @dataclass
 class Review:

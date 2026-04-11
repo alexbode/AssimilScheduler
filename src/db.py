@@ -49,6 +49,13 @@ FROM Reviews
 WHERE course = ? 
 """
 
+GET_COURSES_REVIEW_COUNTS_SQL_QUERY = """
+SELECT course, date, COUNT(*) as count
+FROM Reviews 
+GROUP BY date, course
+"""
+
+
 class DB:
     db_path = Path(__file__).parent / "db" / "assimil_scheduler.db"
 
@@ -97,11 +104,22 @@ class DB:
             if most_recent_row:
                 cursor.execute(REMOVE_BY_ID_SQL_QUERY, (most_recent_row[0],))
 
-    def get_all_reviews(self, course: str) -> list[tuple[str, ReviewType, int]]:
+    def get_all_reviews(self, course: str) -> list[tuple[datetime, int, ReviewType]]:
         with sqlite3.connect(self.db_path) as c:
             cursor = c.cursor()
             cursor.execute(GET_ALL_REVIEWS_SQL_QUERY, (course.lower(),))
             output = []
             for row in cursor:
-                output.append((row[0], row[1], ReviewType[row[2]]))
+                output.append(
+                    (datetime.strptime(row[0], "%Y-%m-%d"), row[1], ReviewType[row[2]])
+                )
+            return output
+
+    def get_courses_review_counts(self) -> dict[str, int]:
+        with sqlite3.connect(self.db_path) as c:
+            cursor = c.cursor()
+            cursor.execute(GET_COURSES_REVIEW_COUNTS_SQL_QUERY)
+            output = []
+            for row in cursor:
+                output.append((row[0], datetime.strptime(row[1], "%Y-%m-%d"), row[2]))
             return output
