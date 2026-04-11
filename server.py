@@ -120,12 +120,18 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
 async def serve_index():
-    return FileResponse("static/pages/home-page.html")
+    headers = {
+        "Cache-Control": "public, max-age=30, immutable",
+    }
+    return FileResponse("static/pages/home-page.html", headers=headers)
 
 
 @app.get("/{course}")
 async def serve_index():
-    return FileResponse("static/pages/language-page.html")
+    headers = {
+        "Cache-Control": "public, max-age=30, immutable",
+    }
+    return FileResponse("static/pages/language-page.html", headers=headers)
 
 
 @app.get("/favicon.ico")
