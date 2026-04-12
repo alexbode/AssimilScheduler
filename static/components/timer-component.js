@@ -3,6 +3,7 @@ class TimerComponent extends HTMLElement {
         super();
         this.attachShadow({ mode: 'open' });
         this.render();
+        this.originalTitle = document.title;
     }
 
     async connectedCallback() {};
@@ -28,9 +29,10 @@ class TimerComponent extends HTMLElement {
         function updateDisplay() {
             console.log("Display button clicked");
             const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            // padStart(2, '0') ensures seconds like 5 show as "05"
-            timerDisplay.textContent = `Timer: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            let seconds = timeLeft % 60;
+            seconds = seconds.toString().padStart(2, '0');
+            timerDisplay.textContent = `Timer: ${minutes}:${seconds}`;
+            document.title = `${minutes}:${seconds}`;
         }
 
         // Logic to start the countdown using setInterval
@@ -45,6 +47,7 @@ class TimerComponent extends HTMLElement {
                 } else {
                     clearInterval(timerId);
                     timerId = null;
+                    document.title = this.originalTitle; // Reset title to original when timer is running
                     alert("Time is up!");
                 }
             }, 1000);
@@ -55,6 +58,7 @@ class TimerComponent extends HTMLElement {
             console.log("Pause button clicked");
             clearInterval(timerId);
             timerId = null;
+            document.title = this.originalTitle; // Reset title to original when timer is running
         });
 
         // Logic to reset the timer to its original state
@@ -64,6 +68,7 @@ class TimerComponent extends HTMLElement {
             timerId = null;
             timeLeft = 15 * 60;
             updateDisplay();
+            document.title = this.originalTitle; // Reset title to original when timer is running
         });
     }
 }
