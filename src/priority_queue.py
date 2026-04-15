@@ -9,8 +9,10 @@ class PriorityQueue:
         self.index: int = 0
         self.course_name: str = None
         self.completed_lessons: dict[tuple[int, str], int] = {}
+        print("PriorityQueue initialized")
 
     def construct_priority_queue(self, course: AssimilCourse):
+        print(f"Constructing priority queue for course: {course.name}")
         self.reset_state()
         self.course_name = course.name
         for lesson in range(1, course.lesson_count + 1):
@@ -84,13 +86,19 @@ class PriorityQueue:
             review_type=prioritized_lesson.review_type,
             review_count=index + 1,
             total_review_count=len(self.q),
-            percent_complete=((index + 1) / len(self.q)) * 100,
+            percent_complete=self.get_percentaege_complete(),
             previous_reviews_completed=prioritized_lesson.review_count,
             previous_lesson_reviews_completed=prioritized_lesson.lesson_count,
             wave_index=prioritized_lesson.wave_index,
+            priority=prioritized_lesson.priority,
         )
 
     def reset_state(self):
         self.index = 0
         self.q = []
         return
+
+    def get_percentaege_complete(self) -> float:
+        if not self.q:
+            return 0
+        return (self.index / len(self.q)) * 100

@@ -1,6 +1,4 @@
 from datetime import datetime
-from dataclasses import dataclass
-from heapq import heappush, heappop
 from typing import Generator
 
 from src.db import DB
@@ -18,6 +16,7 @@ class AssimilScheduler:
     ):
         self.course: AssimilCourse = course
         self.db: DB = db
+        ## TODO add a cache layer here to avoid recomputing the priority queue every time
         self.q: PriorityQueue = priority_queue
         self.q.construct_priority_queue(course)
         self.q.update_state(self.db.count_reviews(self.course.name))
@@ -56,3 +55,6 @@ class AssimilScheduler:
 
     def get_courses_review_counts(self) -> dict[str, int]:
         return self.db.get_courses_review_counts()
+
+    def get_course_percentage(self) -> dict[str, float]:
+        return self.q.get_percentaege_complete()

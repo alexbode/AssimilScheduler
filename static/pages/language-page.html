@@ -7,12 +7,14 @@
     <script type="module" src="static/components/language-component.js"></script>
     <script type="module" src="static/components/container-component.js"></script>
     <script type="module" src="static/components/timer-component.js"></script>
+    <script type="module" src="static/components/wave-component.js"></script>
     <link rel="stylesheet" href="static/css/styles.css">
 </head>
 <body>
     <container-component>
         <language-component>
-            <timer-component></timer-component>
+            <timer-component slot="timer"></timer-component>
+            <wave-component slot="wave"></wave-component>
         </language-component>
     </container-component>
 </body>

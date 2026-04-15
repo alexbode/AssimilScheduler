@@ -59,6 +59,7 @@ DELETE_COURSE_SQL_QUERY = """
 DELETE FROM Reviews WHERE course = ?
 """
 
+
 class DB:
     db_path = Path(__file__).parent / "db" / "assimil_scheduler.db"
 

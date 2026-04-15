@@ -1,6 +1,10 @@
 :root {
-  --bg-color: #121418;
-  --text-color: #391566;
+  --bg-color-1: #121418;
+  --bg-color-2: #404244;
+  --bg-color-3: #808284;
+  --text-color-1: #391566;
+  --text-color-2: #9975b6;
+  --text-color-3: #dcdcdc;
 }
 
 body, html {

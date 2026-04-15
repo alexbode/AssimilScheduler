@@ -51,10 +51,25 @@ class Weights:
     """
 
     offset: int = 0
-    multiplier: int = 1
+    multiplier: int | float = 1
 
-    def get_weight(self, lesson: int) -> int:
-        return self.multiplier * lesson + max(self.offset - 1, 0)
+    def __post_init__(self):
+        if not isinstance(self.offset, int):
+            raise TypeError(f"offset must be an int, not {type(self.offset).__name__}")
+        if type(self.multiplier) not in (float, int):
+            raise TypeError(
+                f"multiplier must be an int or float, not {type(self.multiplier).__name__}"
+            )
+
+        if self.offset < 0:
+            raise ValueError(f"offset must be positive (got {self.offset})")
+        if self.multiplier < 1:
+            raise ValueError(
+                f"multiplier must be greater than 1 (got {self.multiplier})"
+            )
+
+    def get_weight(self, lesson: int) -> float:
+        return float(self.multiplier * lesson + max(self.offset - 1, 0))
 
 
 @dataclass
@@ -84,7 +99,7 @@ class AssimilCourse:
     def __hash__(self):
         return hash(self.name)
 
-    def to_json(self):
+    def to_json(self, current_priority_completed: float = 0.0):
         return {
             "name": self.name,
             "waves": [
@@ -94,6 +109,15 @@ class AssimilCourse:
                         "offset": wave.weights.offset,
                         "multiplier": wave.weights.multiplier,
                     },
+                    "weights_list": [
+                        {
+                            "lesson": n,
+                            "weight": wave.weights.get_weight(n),
+                            "completed": current_priority_completed > wave.weights.get_weight(n),
+                        }
+                        for n in range(1, self.lesson_count + 1)
+                        if not wave.filter(n)
+                    ],
                 }
                 for wave in self.waves
             ],
@@ -127,6 +151,7 @@ class Review:
     previous_reviews_completed: int
     previous_lesson_reviews_completed: int
     wave_index: int
+    priority: float
 
     def __repr__(self):
         return f"Review {self.review_count} of {self.total_review_count} ({self.percent_complete:.2f}%) \nLesson: {self.lesson}, {self.review_type.name} ({self.previous_reviews_completed}) [{self.previous_lesson_reviews_completed}]\n"

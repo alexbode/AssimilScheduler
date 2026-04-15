@@ -12,7 +12,7 @@ class Courses:
     if there exists a variable named `course`.
     """
 
-    def __init__(self, path: str = Path(__file__).parent.parent / "courses"):
+    def __init__(self, path: Path = Path(__file__).parent.parent / "courses"):
         self.path: Path = path
         self.courses: list[AssimilCourse] = self._import_courses()
 

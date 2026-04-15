@@ -32,7 +32,7 @@ class TimerComponent extends HTMLElement {
             let seconds = timeLeft % 60;
             seconds = seconds.toString().padStart(2, '0');
             timerDisplay.textContent = `Timer: ${minutes}:${seconds}`;
-            document.title = `${minutes}:${seconds}`;
+            document.title = `${minutes}:${seconds} - ${this.originalTitle}`;
         }
 
         // Logic to start the countdown using setInterval
