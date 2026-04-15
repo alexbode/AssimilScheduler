@@ -1,6 +1,7 @@
 import sqlite3
 from pathlib import Path
 from datetime import datetime
+from typing import Any
 
 from src.schema import ReviewType
 
@@ -119,7 +120,8 @@ class DB:
                 )
             return output
 
-    def get_courses_review_counts(self) -> dict[str, int]:
+    # update return type``
+    def get_courses_review_counts(self) -> list[tuple[Any, datetime, Any]]:
         with sqlite3.connect(self.db_path) as c:
             cursor = c.cursor()
             cursor.execute(GET_COURSES_REVIEW_COUNTS_SQL_QUERY)
