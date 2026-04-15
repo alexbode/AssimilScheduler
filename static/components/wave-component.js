@@ -23,28 +23,13 @@ class WaveComponent extends HTMLElement {
 
     processData(data) {
         if (!data.waves) return;
-        let maxLesson = 0;
-        let minLesson = Math.min();
         let maxWeight = 0;
-        let minWeight = Math.min();
         data.waves.flatMap(wave => wave.weights_list).forEach(w => {
             if (Math.max(w.weight) > maxWeight) {
                 maxWeight = Math.max(w.weight);
             }
-            if (Math.max(w.lesson) > maxLesson) {
-                maxLesson = Math.max(w.lesson);
-            }
-            if (Math.min(w.weight) < minWeight) {
-                minWeight = Math.min(w.weight);
-            }
-            if (Math.min(w.lesson) < minLesson) {
-                minLesson = Math.min(w.lesson);
-            }
         });
         this.maxWeight = maxWeight;
-        this.minWeight = minWeight;
-        this.maxLesson = maxLesson;
-        this.minLesson = minLesson;
     }
 
     createWaveBar(wave) {
@@ -53,7 +38,7 @@ class WaveComponent extends HTMLElement {
             waveMap.set(Math.floor(w.weight), [w.lesson, w.completed]);
         }
         let html = "";
-        for (let i = 0; i < Math.floor(this.maxWeight); i++) {
+        for (let i = 1; i <= Math.floor(this.maxWeight); i++) {
             const waveValue = waveMap.get(i) || [null, null];
             const lesson = waveValue[0];
             const completed = waveValue[1];

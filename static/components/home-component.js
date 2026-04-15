@@ -13,7 +13,6 @@ class HomeComponent extends HTMLElement {
             const data = await response.json();
             const perc_response = await fetch('/api/v1/percentages');
             const perc_data = await perc_response.json();
-            console.log(perc_data)
             this.render(data.response, perc_data.response);
         }
         catch (error) {
@@ -56,12 +55,12 @@ class HomeComponent extends HTMLElement {
             </style>
             <h1>Assimil Scheduler</h1>
             ${text}
+            <slot></slot>
             `;
         }
     }
     pascalToKebab(str) {
         return str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
-    }
-    ;
+    };
 }
 customElements.define('home-component', HomeComponent);

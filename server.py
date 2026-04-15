@@ -78,6 +78,17 @@ async def courses_percentages():
         response[course] = s.get_course_percentage()
     return {"response": response, "status": "success"}
 
+@app.get("/api/v1/review_counts")
+@stringify_exceptions
+async def review_counts():
+    c = courses.get_course("french")
+    s = AssimilScheduler(c, db=db)
+    response = s.get_review_counts_by_date()
+    return {"response": response, "status": "success"}
+
+
+
+
 
 # @app.get("/api/v1/reviews/{course}")
 # @stringify_exceptions

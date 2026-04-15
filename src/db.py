@@ -50,15 +50,16 @@ FROM Reviews
 WHERE course = ? 
 """
 
-GET_COURSES_REVIEW_COUNTS_SQL_QUERY = """
-SELECT course, date, COUNT(*) as count
-FROM Reviews 
-GROUP BY date, course
-"""
-
 DELETE_COURSE_SQL_QUERY = """
 DELETE FROM Reviews WHERE course = ?
 """
+
+GET_REVIEW_COUNTS_BY_DATE_SQL_QUERY = """
+SELECT date, COUNT(*) as count
+FROM Reviews 
+GROUP BY date
+"""
+
 
 
 class DB:
@@ -120,17 +121,17 @@ class DB:
                 )
             return output
 
-    # update return type``
-    def get_courses_review_counts(self) -> list[tuple[Any, datetime, Any]]:
-        with sqlite3.connect(self.db_path) as c:
-            cursor = c.cursor()
-            cursor.execute(GET_COURSES_REVIEW_COUNTS_SQL_QUERY)
-            output = []
-            for row in cursor:
-                output.append((row[0], datetime.strptime(row[1], "%Y-%m-%d"), row[2]))
-            return output
-
     def delete_course(self, course: str):
         with sqlite3.connect(self.db_path) as c:
             cursor = c.cursor()
             cursor.execute(DELETE_COURSE_SQL_QUERY, (course.lower(),))
+
+    def get_review_counts_by_date(self):
+        with sqlite3.connect(self.db_path) as c:
+            cursor = c.cursor()
+            cursor.execute(GET_REVIEW_COUNTS_BY_DATE_SQL_QUERY)
+            output = []
+            for row in cursor:
+                output.append((datetime.strptime(row[0], "%Y-%m-%d"), row[1]))
+            return output
+

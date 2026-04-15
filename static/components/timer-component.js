@@ -27,7 +27,6 @@ class TimerComponent extends HTMLElement {
 
         // Function to update the text on the screen
         function updateDisplay() {
-            console.log("Display button clicked");
             const minutes = Math.floor(timeLeft / 60);
             let seconds = timeLeft % 60;
             seconds = seconds.toString().padStart(2, '0');
@@ -37,7 +36,6 @@ class TimerComponent extends HTMLElement {
 
         // Logic to start the countdown using setInterval
         startBtn.addEventListener('click', () => {
-            console.log("Start button clicked");
             if (timerId !== null) return; // Prevent multiple intervals
             
             timerId = setInterval(() => {
@@ -55,7 +53,6 @@ class TimerComponent extends HTMLElement {
 
         // Logic to pause the timer by clearing the interval
         pauseBtn.addEventListener('click', () => {
-            console.log("Pause button clicked");
             clearInterval(timerId);
             timerId = null;
             document.title = this.originalTitle; // Reset title to original when timer is running
@@ -63,7 +60,6 @@ class TimerComponent extends HTMLElement {
 
         // Logic to reset the timer to its original state
         resetBtn.addEventListener('click', () => {
-            console.log("Reset button clicked");
             clearInterval(timerId);
             timerId = null;
             timeLeft = 15 * 60;
