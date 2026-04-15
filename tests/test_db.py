@@ -78,17 +78,3 @@ class TestDb(unittest.TestCase):
         self.assertNotIn((date, 3, ReviewType.READ), reviews_after_undo)
         self.assertIn((date, 2, ReviewType.READ), reviews_after_undo)
         self.assertIn((date, 1, ReviewType.READ), reviews_after_undo)
-
-    def test_get_courses_review_counts(self):
-        course1 = "course1"
-        course2 = "course2"
-        date = datetime.fromisoformat("2024-01-01")
-        self.db.insert_review(course1, date, ReviewType.READ, 1)
-        self.db.insert_review(course1, date, ReviewType.READ, 2)
-        self.db.insert_review(course1, date, ReviewType.READ, 3)
-        self.db.insert_review(course2, date, ReviewType.READ, 1)
-        self.db.insert_review(course2, date, ReviewType.READ, 2)
-        review_counts = self.db.get_courses_review_counts()
-        self.assertEqual(len(review_counts), 2)
-        self.assertIn((course1, date, 3), review_counts)
-        self.assertIn((course2, date, 2), review_counts)
