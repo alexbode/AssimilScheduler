@@ -2,6 +2,7 @@ import sys
 import argparse
 
 from src.courses import Courses
+from src.db import DB
 from src.scheduler import AssimilScheduler
 
 parser = argparse.ArgumentParser(description="CLI script for the Assimil scheduler.")
@@ -40,6 +41,13 @@ parser.add_argument(
     help="Manually update the review count for a specific lesson and review type. Example: --manual_update 5 LISTEN",
 )
 
+parser.add_argument(
+    "--query",
+    "-q",
+    type=str,
+    help="Query the sqlite3 db"
+)
+
 if __name__ == "__main__":
     args = parser.parse_args()
 
@@ -50,9 +58,14 @@ if __name__ == "__main__":
             print(c)
         sys.exit(0)
 
+    if args.query:
+        db = DB()
+        print(db.query(args.query))
+        sys.exit(0)
+
+
     if args.course and args.next:
         course = courses.get_course(args.course)
-        s = AssimilScheduler(course)
         if args.done and not args.manual_update:
             s.mark_as_done()
             sys.exit(0)

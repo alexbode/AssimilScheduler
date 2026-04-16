@@ -135,3 +135,12 @@ class DB:
                 output.append((datetime.strptime(row[0], "%Y-%m-%d"), row[1]))
             return output
 
+    def query(self, query: str):
+        with sqlite3.connect(self.db_path) as c:
+            cursor = c.cursor()
+            cursor.execute(query)
+            output = []
+            for row in cursor:
+                output.append(row)
+            return output
+

@@ -13,8 +13,8 @@ class ContainerComponent extends HTMLElement {
         div.grid-container {
             height: 100vh;
             display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 8fr) minmax(0, 1fr);
-            grid-template-rows: minmax(0, 1fr) minmax(0, 8fr) minmax(0, 1fr);
+            grid-template-columns: minmax(0, 1fr) minmax(0, 12fr) minmax(0, 1fr);
+            grid-template-rows: minmax(0, 1fr) minmax(0, 12fr) minmax(0, 1fr);
             background-color: var(--bg-color-3);
         }
 

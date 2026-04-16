@@ -113,7 +113,7 @@ class AssimilCourse:
                         {
                             "lesson": n,
                             "weight": wave.weights.get_weight(n),
-                            "completed": current_priority_completed > wave.weights.get_weight(n),
+                            "completed": current_priority_completed >= wave.weights.get_weight(n),
                         }
                         for n in range(1, self.lesson_count + 1)
                         if not wave.filter(n)

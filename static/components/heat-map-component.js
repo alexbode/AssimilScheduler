@@ -37,14 +37,17 @@ class HeatMapComponent extends HTMLElement {
         }
 
         const now = new Date();
-        const dayIndex = now.getDay();
+        const offset = now.getTimezoneOffset() * 60000;
+        const date = new Date(now - offset);
+        const dayIndex = date.getDay();
         let html = ""
-        for (let i = 364 - dayIndex + 4; i >= 0; i--) {
-            const date = new Date();
+        for (let i = 364 + (dayIndex % 7); i >= 0; i--) {
+            const n = new Date()
+            const date = new Date(n - offset);
             date.setDate(now.getDate() - i);
             const dateString = date.toISOString().split('T')[0] + "T00:00:00";
             const reviewCount = reviewCountMap.get(dateString) || -1;
-            const activityLevel = reviewCount == -1 ? 0 : (Math.floor(reviewCount / maxReviewCount * 5) + 1);
+            const activityLevel = reviewCount == -1 ? 0 : (Math.floor(reviewCount / maxReviewCount * 4) + 1);
             html += `<div class="cell level-${activityLevel}" title="${date.toDateString()}: ${Math.max(0, reviewCount)} reviews"></div>`;
         this.shadowRoot.innerHTML = `
         <style>
