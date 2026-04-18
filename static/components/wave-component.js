@@ -34,16 +34,20 @@ class WaveComponent extends HTMLElement {
 
     createWaveBar(wave) {
         let waveMap = new Map();
+        console.log(wave)
         for (let w of wave.weights_list) {
-            waveMap.set(Math.floor(w.weight), [w.lesson, w.completed]);
+            waveMap.set(Math.floor(w.weight), [w.lesson, w.completed, w.skip]);
         }
         let html = "";
         for (let i = 1; i <= Math.floor(this.maxWeight); i++) {
-            const waveValue = waveMap.get(i) || [null, null];
+            const waveValue = waveMap.get(i) || [null, null, null];
             const lesson = waveValue[0];
             const completed = waveValue[1];
+            const skip = waveValue[2];
             let state = "exclude";
-            if (completed == true) {
+            if (skip == true) {
+                state = "skip";
+            } else if (completed == true) {
                 state = "completed";
             } else if (completed == false) {
                 state = "not-completed";
@@ -123,6 +127,10 @@ class WaveComponent extends HTMLElement {
 
             .bar.exclude {
                 background-color: #505050; /* Instatus Red */
+            }
+
+            .bar.skip {
+                background-color: #707070; /* Instatus Red */
             }
 
             .bar.not-completed {

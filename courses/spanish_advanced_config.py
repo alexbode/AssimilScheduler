@@ -29,7 +29,7 @@ course = AssimilCourse(
         ),
         Wave(
             review_type=ReviewType.LISTEN,
-            weights=Weights(offset=LESSON_COUNT),
+            weights=Weights(offset=LESSON_COUNT, multiplier=1.5),
             filter=lambda x: x % 7 == 0,
         ),
         # READ

@@ -47,8 +47,13 @@ class HeatMapComponent extends HTMLElement {
             date.setDate(now.getDate() - i);
             const dateString = date.toISOString().split('T')[0] + "T00:00:00";
             const reviewCount = reviewCountMap.get(dateString) || -1;
-            const activityLevel = reviewCount == -1 ? 0 : (Math.floor(reviewCount / maxReviewCount * 4) + 1);
-            html += `<div class="cell level-${activityLevel}" title="${date.toDateString()}: ${Math.max(0, reviewCount)} reviews"></div>`;
+            const activityRatio = Math.max(reviewCount / maxReviewCount, 0.01);
+            const r = "0x10";
+            const g = "0xb9";
+            const b = "0x01";
+            const bgColor = Math.floor(parseInt(r) * activityRatio).toString(16).padStart(2, '0') + Math.floor(parseInt(g) * activityRatio).toString(16).padStart(2, '0') + parseInt(b).toString(16).padStart(2, '0');
+            
+            html += `<div class="cell" title="${Math.max(0, reviewCount)} reviews on ${date.toDateString()}" style="background-color: #${bgColor}"></div>`;
         this.shadowRoot.innerHTML = `
         <style>
         .heatmap {
@@ -63,27 +68,19 @@ class HeatMapComponent extends HTMLElement {
         .cell {
             width: 12px;
             height: 12px;
-            background-col            .bar:hover {
-                opacity: 0.8;
-                transform: scaleY(1.1); /* Slight vertical pop on hover */
-            }or: #ebedf0;
+            background-color: #ebedf0;
             border-radius: 3px;
             transition: opacity 0.2s ease, transform 0.2s ease;
             cursor: pointer;
+        }         
+        .bar:hover {
+            opacity: 0.8;
+            transform: scaleY(1.1); /* Slight vertical pop on hover */
         }
         .cell:hover {
             opacity: 0.8;
-            transform: scale(1.1); /* Slight vertical pop on hover */
+            transform: scale(1.1);
         }
-
-        /* Define intensity levels */
-        // .level-0 { background-cologrid-auto-flow: columnr: #000000; }
-        .level-0 { background-color: #202321; }
-        .level-1 { background-color: #ebedf0; }
-        .level-2 { background-color: #9be9a8; }
-        .level-3 { background-color: #40c463; }
-        .level-4 { background-color: #30a14e; }
-        .level-5 { background-color: #216e39; }
         .container {
             display: flex;
             justify-content: center;

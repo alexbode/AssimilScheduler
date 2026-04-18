@@ -15,7 +15,7 @@ class ContainerComponent extends HTMLElement {
             display: grid;
             grid-template-columns: minmax(0, 1fr) minmax(0, 12fr) minmax(0, 1fr);
             grid-template-rows: minmax(0, 1fr) minmax(0, 12fr) minmax(0, 1fr);
-            background-color: var(--bg-color-3);
+            background-color: var(--bg-color-1);
         }
 
         div.center-cell {
