@@ -20,6 +20,14 @@ class HeatMapComponent extends HTMLElement {
         }
     }
 
+    averagePerDay(data) {
+        if (data == null || data.length === 0) {
+            return 0;
+        }
+        const totalReviews = data.reduce((sum, entry) => sum + entry[1], 0);
+        return (totalReviews / data.length).toFixed(2);
+    }
+
     async render(data) {
         if (data == null) {
             this.shadowRoot.innerHTML = ``;
@@ -86,6 +94,7 @@ class HeatMapComponent extends HTMLElement {
             justify-content: center;
         }
         </style>
+        <p style="text-align: center;">Average reviews per day: ${this.averagePerDay(data)}</p>
         <div class="container">
             <div class="heatmap">
                 ${html}
