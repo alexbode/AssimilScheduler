@@ -50,9 +50,11 @@ course = AssimilCourse(
             weights=Weights(offset=20),
             filter=lambda x: x % 7 == 0,
         ),
+        # Transcribe
+        #
         Wave(
-            review_type=ReviewType.SHADOW_BLIND,
-            weights=Weights(offset=70, multiplier=1.5),
+            review_type=ReviewType.TRANSCRIBE,
+            weights=Weights(offset=30, multiplier=1.5),
             filter=lambda x: x % 7 == 0,
         ),
         # TRANSLATE
