@@ -25,8 +25,6 @@ class ReviewType(Enum):
     LISTEN = auto()
     # Shadow the audio while reading the target text for 2 passes.
     SHADOW = auto()
-    # Shadow the audio blind for 2 passes.
-    SHADOW_BLIND = auto()
     # Read the target text aloud and grammar points.
     READ = auto()
     # Copy the target language text while repeating aloud.
@@ -37,6 +35,8 @@ class ReviewType(Enum):
     REVERSE_TRANSLATE = auto()
     # Listen to audio and write what you hear in the target language.
     TRANSCRIBE = auto()
+    # Verbal reverse translate, read the text in your native language and say the translation aloud in the target language.
+    VERBAL_REVERSE_TRANSLATE = auto()
     # Review grammar points without looking at the text.
     GRAMMAR_POINTS = auto()
 
@@ -102,6 +102,8 @@ class AssimilCourse:
     def to_json(self, current_priority_completed: float = 0.0):
         return {
             "name": self.name,
+            "current_priority_completed": current_priority_completed,
+            "lesson_count": self.lesson_count,
             "waves": [
                 {
                     "review_type": wave.review_type.name,
@@ -112,16 +114,15 @@ class AssimilCourse:
                     "weights_list": [
                         {
                             "lesson": n,
-                            "weight": wave.weights.get_weight(n),
-                            "completed": current_priority_completed >= wave.weights.get_weight(n) and not wave.filter(n),
+                            "weight": wave.weights.get_weight(n) + i / 10000,
+                            "completed": (i / 10000 + wave.weights.get_weight(n)) < current_priority_completed,
                             "skip": wave.filter(n),
                         }
                         for n in range(1, self.lesson_count + 1)
                     ],
                 }
-                for wave in self.waves
+                for i, wave in enumerate(self.waves)
             ],
-            "lesson_count": self.lesson_count,
         }
 
 

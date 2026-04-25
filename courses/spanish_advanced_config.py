@@ -40,6 +40,10 @@ course = AssimilCourse(
         ),
         Wave(
             review_type=ReviewType.READ,
+            weights=Weights(offset=75),
+        ),
+        Wave(
+            review_type=ReviewType.READ,
             weights=Weights(offset=11, multiplier=1.75),
             filter=lambda x: x % 7 != 0,
         ),
@@ -54,7 +58,7 @@ course = AssimilCourse(
         #
         Wave(
             review_type=ReviewType.TRANSCRIBE,
-            weights=Weights(offset=30, multiplier=1.5),
+            weights=Weights(offset=35),
             filter=lambda x: x % 7 == 0,
         ),
         # TRANSLATE

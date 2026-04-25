@@ -59,14 +59,11 @@ course = AssimilCourse(
             weights=Weights(offset=70, multiplier=1.5),
             filter=lambda x: x % 7 == 0,
         ),
+        # VERBAL_REVERSE_TRANSLATE
+        #
         Wave(
-            review_type=ReviewType.SHADOW_BLIND,
-            weights=Weights(offset=80, multiplier=1.5),
-            filter=lambda x: x % 7 == 0,
-        ),
-        Wave(
-            review_type=ReviewType.SHADOW_BLIND,
-            weights=Weights(offset=90, multiplier=1.5),
+            review_type=ReviewType.VERBAL_REVERSE_TRANSLATE,
+            weights=Weights(offset=80, multiplier=1.66),
             filter=lambda x: x % 7 == 0,
         ),
         # SCRIPTORIUM

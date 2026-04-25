@@ -58,8 +58,8 @@ async def health():
 async def get_course(course: str):
     c = courses.get_course(course)
     s = AssimilScheduler(c, db=db)
-    next_review_lesson = next(s.review_generator(next_n=1))
-    return {"response": c.to_json(next_review_lesson.priority), "status": "success"}
+    current_lesson = s.q.q[s.q.index]
+    return {"response": c.to_json(current_lesson.priority), "status": "success"}
 
 
 @app.get("/api/v1/courses")

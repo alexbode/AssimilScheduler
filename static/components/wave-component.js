@@ -77,6 +77,10 @@ class WaveComponent extends HTMLElement {
             return 
         }
         this.processData(data);
+        console.log("Wave Component Data:")
+        console.log(data.name)
+        console.log(data.current_priority_completed)
+        console.log(data.lesson_count)
         let listHtml = "";
         for (let i = 0; i < 250; i++) {
             listHtml += `<div class="bar operational" title="May ${i + 1}: No downtime"></div>`;
